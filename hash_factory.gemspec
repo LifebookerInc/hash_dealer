@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "hash_factory.gemspec",
     "lib/hash_factory.rb",
     "spec/lib/hash_factory_spec.rb",
     "spec/spec_helper.rb"
