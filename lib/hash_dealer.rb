@@ -2,7 +2,7 @@ require 'path_string'
 require 'core_extensions'
 require 'matcher'
 
-class HashFactory
+class HashDealer
   
   attr_accessor :parent
 
@@ -17,7 +17,7 @@ class HashFactory
   end
   
   def self.roll(name, *args)
-    raise Exception.new("No HashFactory called #{name}") unless self.hashes[name]
+    raise Exception.new("No HashDealer called #{name}") unless self.hashes[name]
     self.hashes[name].attributes(*args)
   end
   
@@ -46,7 +46,7 @@ class HashFactory
   def attributes(*args)
     # allows us to set a root value
     return @attributes unless @attributes.is_a?(Hash)
-    att = @parent ? HashFactory.roll(@parent.to_sym) : {}
+    att = @parent ? HashDealer.roll(@parent.to_sym) : {}
     @attributes.each do |k,v|
       att[k] = v.is_a?(Proc) ? v.call(*args) : v
     end
