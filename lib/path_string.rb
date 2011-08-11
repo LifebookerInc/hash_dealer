@@ -31,6 +31,26 @@ class PathString < String
     val
   end
   
+  # 
+  # 
+  def self.extract_params(known_path, entered_path)
+    params = {}.with_indifferent_access
+    
+    self.get_zipped_array(known_path, entered_path).each do |kp, ep|
+      if kp.nil? || ep.nil?
+        raise Exception.new("Cannot extract params for routes that don't match")
+      end
+      if kp.start_with?(":")
+        if params[kp[1..-1]]
+          raise Exception.new("Cannot define a route containing two parameters with the same name")
+        else
+          params[kp[1..-1]] = ep
+        end
+      end
+    end
+    return params
+  end
+  
   private
   def self.get_zipped_array(known_path, entered_path)
     # make these strings
