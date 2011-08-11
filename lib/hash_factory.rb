@@ -1,3 +1,7 @@
+require 'path_string'
+require 'core_extensions'
+require 'matcher'
+
 class HashFactory
   
   attr_accessor :parent
