@@ -10,6 +10,6 @@ group :development do
   gem "jeweler"
   gem "rspec"
   gem "rcov"
-  gem "guard-rspec"
+  gem "guard-rspec", "=0.4.0"
   gem "ruby-debug19", :require => "ruby-debug"
 end

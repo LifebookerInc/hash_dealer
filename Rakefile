@@ -15,10 +15,10 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "hash_factory"
-  gem.homepage = "http://github.com/dlangevin/hash_factory"
+  gem.homepage = "http://github.com/LifebookerInc/hash_factory"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Hash Factory - like Factory Girl but for Hashes only}
+  gem.description = %Q{Like Factory Girl but for Hashes only}
   gem.email = "dan.langevin@lifebooker.com"
   gem.authors = ["Dan Langevin"]
   # dependencies defined in Gemfile
