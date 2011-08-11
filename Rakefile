@@ -14,8 +14,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "hash_factory"
-  gem.homepage = "http://github.com/LifebookerInc/hash_factory"
+  gem.name = "hash_dealer"
+  gem.homepage = "http://github.com/LifebookerInc/hash_dealer"
   gem.license = "MIT"
   gem.summary = %Q{Hash Factory - like Factory Girl but for Hashes only}
   gem.description = %Q{Like Factory Girl but for Hashes only}
