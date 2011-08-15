@@ -7,7 +7,7 @@ class PathString < String
     if self =~ /^:/ || other =~ /^:/
       return true
     elsif self =~ /\/:/ || other =~ /\/:/
-      return self.paths_match?(self, other)
+      return self.class.paths_match?(self, other)
     else
       super
     end
