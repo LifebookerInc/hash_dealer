@@ -20,3 +20,18 @@ class Array
     end
   end
 end
+class Hash
+  def to_kief
+    ret = HashDealer::Kief.new
+    self.each_pair do |k,v|
+      if v.instance_of?(Hash)
+        ret[k] = v.to_kief
+      elsif v.instance_of?(Array)
+        ret[k] = v.collect{|n| n.instance_of?(Hash) ? n.to_kief : n}
+      else
+        ret[k] = v
+      end
+    end
+    ret
+  end
+end

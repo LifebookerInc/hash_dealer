@@ -35,18 +35,18 @@ class HashDealer
   # method missing
   def method_missing(meth, *args, &block)
     raise Exception.new("Please provide either a String or a block to #{meth}") unless (args.length == 1 || (args.empty? && block_given?))
-    @attributes ||= {}
+    @attributes ||= Kief.new
     if block_given?
       @attributes[meth.to_sym] = block
     else
-      @attributes[meth.to_sym] = args.first
+      @attributes[meth.to_sym] = args.first.is_a?(Hash) ? args.first.to_kief : args.first
     end
   end
   
   def attributes(*args)
     # allows us to set a root value
     return @attributes unless @attributes.is_a?(Hash)
-    att = @parent ? HashDealer.roll(@parent.to_sym) : {}
+    att = @parent ? HashDealer.roll(@parent.to_sym) : Kief.new
     @attributes.each do |k,v|
       att[k] = v.is_a?(Proc) ? v.call(*args) : v
     end
@@ -57,6 +57,29 @@ class HashDealer
       end
     end
     att
+  end
+  # subclass of Hash that defines the matcher method, returning strings like :xyz
+  class Kief < Hash
+    def make_matcher(val)
+      case val
+        when String 
+          return ":#{val}"
+        when Kief 
+          return val.matcher
+        when Array 
+          return val.collect{|n| make_matcher(n)}
+        else
+          return val 
+      end
+    end
+    # get this Kief as a matcher - works recursively
+    def matcher
+      ret = self.class.new
+      self.each_pair do |k,v|
+        ret[k] = make_matcher(v)
+      end
+      ret
+    end
   end
   
 end

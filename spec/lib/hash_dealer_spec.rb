@@ -51,6 +51,14 @@ describe HashDealer do
     HashDealer.roll(:variable, {"abc" => "123"})[:abc].should eql("123")
   end
   
-  
-
+  it "should extend itself to matchers - preventing us from having to re-define them" do
+    HashDealer.define(:variable) do
+      abc("test")
+      val({
+        :k => "v"
+      })
+    end
+    String.new(HashDealer.roll(:variable).matcher[:abc]).should eql ":test"
+    String.new(HashDealer.roll(:variable).matcher[:val][:k]).should eql ":v"
+  end
 end
