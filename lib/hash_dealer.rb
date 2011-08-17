@@ -60,23 +60,36 @@ class HashDealer
   end
   # subclass of Hash that defines the matcher method, returning strings like :xyz
   class Kief < Hash
-    def make_matcher(val)
+    def make_matcher(val, opts = {})
       case val
         when String 
           return ":#{val}"
         when Kief 
-          return val.matcher
+          return val.matcher(opts)
         when Array 
-          return val.collect{|n| make_matcher(n)}
+          return val.collect{|n| make_matcher(n,opts)}
         else
           return val 
       end
     end
     # get this Kief as a matcher - works recursively
-    def matcher
+    def matcher(opts = {})
+      # Only takes precedence over except
+      if opts[:only]
+        opts[:except] = []
+        opts[:only] = opts[:only].collect{|item| item.to_sym}
+      else
+        opts[:only] = []
+        opts[:except] = (opts[:except] || []).collect{|item| item.to_sym}
+      end
+
       ret = self.class.new
       self.each_pair do |k,v|
-        ret[k] = make_matcher(v)
+        if opts[:only].include?(k.to_sym) || (opts[:only].empty? && !opts[:except].include?(k.to_sym))
+          ret[k] = make_matcher(v, (opts[k.to_sym] || {}))
+        else
+          ret[k] = v
+        end
       end
       ret
     end

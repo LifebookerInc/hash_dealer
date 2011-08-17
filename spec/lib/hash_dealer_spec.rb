@@ -61,4 +61,36 @@ describe HashDealer do
     String.new(HashDealer.roll(:variable).matcher[:abc]).should eql ":test"
     String.new(HashDealer.roll(:variable).matcher[:val][:k]).should eql ":v"
   end
+  
+  it "should not alter fields passed into the matcher method in the except array" do
+    HashDealer.define(:variable) do
+      a("test_a")
+      b("test_b")
+    end
+    HashDealer.roll(:variable).matcher(:except => [:b])[:a].should eql(":test_a")
+    HashDealer.roll(:variable).matcher(:except => [:b])[:b].should eql("test_b")
+  end
+  
+  it "should only alter fields passed into the matcher method in the the only array" do
+    HashDealer.define(:variable) do
+      a("test_a")
+      b("test_b")
+    end
+    HashDealer.roll(:variable).matcher(:only => [:b])[:a].should eql("test_a")
+    HashDealer.roll(:variable).matcher(:only => [:b])[:b].should eql(":test_b")
+  end
+  
+  it "should apply except/only to nested values if they are defined by hash dealer and specified" do
+    HashDealer.define(:parent) do
+      a("test_a")
+      b{HashDealer.roll(:child)}
+    end
+    HashDealer.define(:child) do
+      a("child_a")
+      b("child_b")
+    end
+    HashDealer.roll(:parent).matcher(:only => [:b], :b => {:except => [:a]})[:a].should eql("test_a")
+    HashDealer.roll(:parent).matcher(:only => [:b], :b => {:except => [:a]})[:b][:a].should eql("child_a")
+    HashDealer.roll(:parent).matcher(:only => [:b], :b => {:except => [:a]})[:b][:b].should eql(":child_b")
+  end
 end
