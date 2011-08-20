@@ -1,3 +1,17 @@
+class Object
+  # allows us to call matcher blindly
+  def matcher(opts = {})
+    return self
+  end
+end
+
+# The only really important matcher
+class String
+  def matcher(opts = {})
+    ":#{self}"
+  end
+end
+
 class Hash
   def pathify_strings!
     self.each_pair do |k,v|
@@ -7,6 +21,22 @@ class Hash
         self[k] = PathString.new(URI.decode(v))
       end
     end
+  end
+  # recursively get a matcher for each value
+  def matcher(opts = {})
+    opts[:only] ||= self.keys.collect(&:to_sym)
+    opts[:only] = opts[:only].collect(&:to_sym)
+    opts[:only] -= (opts[:except] || []).collect(&:to_sym)
+    
+    ret = self.class.new
+    self.each_pair do |k,v|
+      if opts[:only].include?(k.to_sym)
+        ret[k] = v.matcher(opts[k.to_sym] || {})
+      else
+        ret[k] = v
+      end
+    end
+    ret
   end
 end
 class Array
@@ -19,19 +49,8 @@ class Array
       end
     end
   end
-end
-class Hash
-  def to_kief
-    ret = HashDealer::Kief.new
-    self.each_pair do |k,v|
-      if v.instance_of?(Hash)
-        ret[k] = v.to_kief
-      elsif v.instance_of?(Array)
-        ret[k] = v.collect{|n| n.instance_of?(Hash) ? n.to_kief : n}
-      else
-        ret[k] = v
-      end
-    end
-    ret
+  # call matcher on all of the elements
+  def matcher(opts = {})
+    self.collect(&:matcher)
   end
 end

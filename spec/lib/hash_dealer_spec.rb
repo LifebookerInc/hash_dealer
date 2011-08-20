@@ -93,4 +93,15 @@ describe HashDealer do
     HashDealer.roll(:parent).matcher(:only => [:b], :b => {:except => [:a]})[:b][:a].should eql("child_a")
     HashDealer.roll(:parent).matcher(:only => [:b], :b => {:except => [:a]})[:b][:b].should eql(":child_b")
   end
+  
+  it "should define a matcher for when the response is an Array" do
+    HashDealer.define(:variable) do
+      root([{
+        :abc => "123",
+        :deff => "1234"
+      }])
+    end
+    HashDealer.roll(:variable).matcher.should eql([{:abc => ":123", :deff => ":1234"}])
+  end
+  
 end
