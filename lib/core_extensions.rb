@@ -8,7 +8,8 @@ end
 # The only really important matcher
 class String
   def matcher(opts = {})
-    ":#{self}"
+    # if we have a leading : or a /:xyz - a matcher is already defined
+    self =~ /(^:|\/:)/ ? self : ":#{self}"
   end
 end
 
