@@ -103,5 +103,12 @@ describe HashDealer do
     end
     HashDealer.roll(:variable).matcher.should eql([{:abc => ":123", :deff => ":1234"}])
   end
-  
+
+  it "should allow defining a hash where one of the keys is attributes" do
+    HashDealer.define(:test) do
+      attributes("test")
+    end
+    HashDealer.roll(:test)[:attributes].should eql("test")
+    HashDealer.roll(:test).matcher[:attributes].should eql(":test")
+  end
 end

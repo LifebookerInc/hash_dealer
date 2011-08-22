@@ -18,7 +18,7 @@ class HashDealer
   
   def self.roll(name, *args)
     raise Exception.new("No HashDealer called #{name}") unless self.hashes[name]
-    self.hashes[name].attributes(*args)
+    self.hashes[name]._attributes(*args)
   end
   
   # initializer just calls the block from within our DSL
@@ -31,8 +31,10 @@ class HashDealer
   def root(value)
     @attributes = value
   end
+  
   # get the stored attributes for this HashDealer
-  def attributes(*args)
+  def _attributes(*args)
+
     # allows us to set a root value
     return @attributes unless @attributes.is_a?(Hash)
     att = @parent ? HashDealer.roll(@parent.to_sym) : Hash.new
