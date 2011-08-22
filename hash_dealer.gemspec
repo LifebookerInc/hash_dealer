@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/LifebookerInc/hash_dealer}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.7.2}
   s.summary = %q{Hash Factory - like Factory Girl but for Hashes only}
 
   if s.respond_to? :specification_version then
