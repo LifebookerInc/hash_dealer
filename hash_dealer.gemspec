@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hash_dealer}
-  s.version = "1.2.1"
+  s.version = "1.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Langevin"]
-  s.date = %q{2011-08-20}
+  s.date = %q{2011-08-22}
   s.description = %q{Like Factory Girl but for Hashes only}
   s.email = %q{dan.langevin@lifebooker.com}
   s.extra_rdoc_files = [
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/LifebookerInc/hash_dealer}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.7.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{Hash Factory - like Factory Girl but for Hashes only}
 
   if s.respond_to? :specification_version then
