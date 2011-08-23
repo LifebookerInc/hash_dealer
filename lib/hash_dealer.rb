@@ -36,7 +36,7 @@ class HashDealer
   def _attributes(*args)
 
     # allows us to set a root value
-    return @attributes unless @attributes.is_a?(Hash)
+    return @attributes.clone unless @attributes.is_a?(Hash)
     att = @parent ? HashDealer.roll(@parent.to_sym) : Hash.new
     @attributes.each do |k,v|
       att[k] = v.is_a?(Proc) ? v.call(*args) : v

@@ -103,6 +103,17 @@ describe HashDealer do
     end
     HashDealer.roll(:variable).matcher.should eql([{:abc => ":123", :deff => ":1234"}])
   end
+  
+  it "should return a clone of its attributes, not an actual reference" do
+    HashDealer.define(:a) do
+      root({:a => "b"})
+    end
+    HashDealer.define(:b) do
+      a "test"
+    end
+    HashDealer.roll(:a).should_not be HashDealer.roll(:a)
+    HashDealer.roll(:b).should_not be HashDealer.roll(:b)
+  end
 
   it "should allow defining a hash where one of the keys is attributes" do
     HashDealer.define(:test) do
