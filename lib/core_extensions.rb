@@ -5,6 +5,17 @@ class Object
   end
 end
 
+class Numeric
+  def matcher(opts={})
+    PathString.new(":#{self}")
+  end
+  def ==(other)
+    return true if other.is_a?(PathString) && other =~ /^:/
+    super
+  end
+  alias_method :eql?, :==
+end
+
 # The only really important matcher
 class String
   def matcher(opts = {})
@@ -18,8 +29,8 @@ class Hash
     self.each_pair do |k,v|
       if v.is_a?(Array) || v.is_a?(Hash)
         v.pathify_strings!
-      elsif v.instance_of?(String)
-        self[k] = PathString.new(URI.decode(v))
+      elsif v.instance_of?(String) || v.is_a?(Numeric)
+        self[k] = PathString.new(URI.decode(v.to_s))
       end
     end
   end
@@ -45,8 +56,8 @@ class Array
     self.each_with_index do |v,k|
       if v.is_a?(Array) || v.is_a?(Hash)
         v.pathify_strings!
-      elsif v.instance_of?(String)
-        self[k] = PathString.new(URI.decode(v))
+      elsif v.instance_of?(String) || v.is_a?(Numeric)
+        self[k] = PathString.new(URI.decode(v.to_s))
       end
     end
   end

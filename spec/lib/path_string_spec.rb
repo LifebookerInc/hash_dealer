@@ -36,5 +36,4 @@ describe PathString do
   it "should match wildcard paths" do
     PathString.paths_match?("/a/1/test/2", "/a/:1/test/:2").should be_true
   end
-  
 end

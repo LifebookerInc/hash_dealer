@@ -4,7 +4,7 @@ class PathString < String
   
   def == (other)
     # if either is a string that starts with a :, return true
-    if self =~ /^:/ || other =~ /^:/
+   if self =~ /^:/ || (other.is_a?(Numeric) && self =~ /^:\d+$/) || other =~ /^:/
       return true
     elsif self =~ /\/:/ || other =~ /\/:/
       return self.class.paths_match?(self, other)
@@ -12,6 +12,7 @@ class PathString < String
       super
     end
   end
+  alias_method :eql?, :==
   
   def self.paths_match?(a, b)
     self.get_zipped_array(a, b).each do |kp, ep|
@@ -26,8 +27,15 @@ class PathString < String
   end
   
   def self.as_sorted_json(val)
-    val = val.is_a?(String) ? ActiveSupport::JSON.decode(val).sort : ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(val)).sort
+    val = self.sort_json(val)
     val.pathify_strings!
+    val
+  end
+  
+  # helper method to be called recursively
+  def self.sort_json(val)
+    val = val.is_a?(String) ? ActiveSupport::JSON.decode(val).sort : ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(val)).sort
+    val = val.collect{|v| v.collect{|n| n.is_a?(Hash) ? self.sort_json(n) : n}}
     val
   end
   

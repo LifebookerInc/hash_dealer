@@ -94,6 +94,14 @@ describe HashDealer do
     HashDealer.roll(:parent).matcher(:only => [:b], :b => {:except => [:a]})[:b][:b].should eql(":child_b")
   end
   
+  it "should match on numeric values" do
+    HashDealer.define(:parent) do
+      a(1)
+    end
+    HashDealer.roll(:parent).matcher[:a].should eql 100
+    HashDealer.roll(:parent)[:a].should_not eql 100
+  end
+  
   it "should define a matcher for when the response is an Array" do
     HashDealer.define(:variable) do
       root([{
