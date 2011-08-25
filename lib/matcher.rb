@@ -1,5 +1,6 @@
 # just in case it's not loaded
 require 'rspec'
+require 'pp'
 
 RSpec::Matchers.define(:match_response) do |actual|
   
@@ -8,13 +9,12 @@ RSpec::Matchers.define(:match_response) do |actual|
   end
   
   failure_message_for_should do |container|
-    "expected #{PathString.as_sorted_json(actual)}\n to equal\n #{PathString.as_sorted_json(container)}"
+    "expected #{PathString.as_sorted_json(actual).pretty_inspect}\n to equal\n #{PathString.as_sorted_json(container).pretty_inspect}"
   end
   
   failure_message_for_should_not do |container|
-    "expected #{PathString.as_sorted_json(actual)}\n not to equal\n #{PathString.as_sorted_json(container)}"
+    "expected #{PathString.as_sorted_json(actual).pretty_inspect}\n not to equal\n #{PathString.as_sorted_json(container).pretty_inspect}"
   end
-  
 end
 
 # alias as match_json
