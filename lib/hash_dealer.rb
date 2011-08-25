@@ -1,6 +1,6 @@
-require 'path_string'
-require 'core_extensions'
-require 'matcher'
+require File.expand_path('../path_string', __FILE__)
+require File.expand_path('../core_extensions', __FILE__)
+require File.expand_path('../matcher', __FILE__)
 
 class HashDealer
   
