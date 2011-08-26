@@ -28,7 +28,7 @@ class PathString < String
   
   def self.as_sorted_json(val)
     val = self.sort_json(val)
-    val.pathify_strings!
+    val = val.pathify_strings
     val
   end
   

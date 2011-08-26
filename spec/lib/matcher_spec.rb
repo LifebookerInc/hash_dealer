@@ -14,4 +14,9 @@ describe "match_resonse Matcher" do
     {"a" => ":b"}.should match_list([{"a" => "test"}, {"a" => "test2"}])
   end
   
+  it "should match using wildcards for variable length arrays" do
+    {"a" => ["a"]}.matcher.should match_response({"a" => ["a", "b", "c", "d"]})
+    {"a" => [{"a" => "b"}]}.matcher.should match_response({"a" => [{"a" => "c"},{"a" => "x"},{"a" => "y"}]})
+  end
+  
 end

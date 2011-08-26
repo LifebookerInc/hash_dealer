@@ -25,14 +25,15 @@ class String
 end
 
 class Hash
-  def pathify_strings!
+  def pathify_strings
     self.each_pair do |k,v|
       if v.is_a?(Array) || v.is_a?(Hash)
-        v.pathify_strings!
+        self[k] = v.pathify_strings
       elsif v.instance_of?(String) || v.is_a?(Numeric)
         self[k] = PathString.new(URI.decode(v.to_s))
       end
     end
+    self
   end
   # recursively get a matcher for each value
   def matcher(opts = {})
@@ -52,17 +53,35 @@ class Hash
   end
 end
 class Array
-  def pathify_strings!
-    self.each_with_index do |v,k|
-      if v.is_a?(Array) || v.is_a?(Hash)
-        v.pathify_strings!
+  def pathify_strings
+    if self.first == ":matcher"
+      val = VariableArray.new(self)
+    else
+      val = self
+    end
+    val.each_with_index do |v,k|
+      if v.is_a?(Array)  || v.is_a?(Hash)
+        val[k] = v.pathify_strings
       elsif v.instance_of?(String) || v.is_a?(Numeric)
-        self[k] = PathString.new(URI.decode(v.to_s))
+        val[k] = PathString.new(URI.decode(v.to_s))
       end
     end
+    val
   end
   # call matcher on all of the elements
   def matcher(opts = {})
-    self.collect(&:matcher)
+    self.unshift(":matcher")
+    VariableArray.new(self.collect(&:matcher))
   end
+  # we want this to apply to both :eql? and ==
+  alias_method :eql?, :==
+  # we want this to add decorator behavior to ==, proxying to VariableArray if possible
+  define_method "==_with_variable_array" do |other|
+    return other == self if other.is_a?(VariableArray)
+    self.send("==_without_variable_array",other)
+  end
+  # Equivalent to:
+  # alias_method_chain "==", "variable_array"
+  alias_method "==_without_variable_array", :==
+  alias_method :==, "==_with_variable_array"
 end
