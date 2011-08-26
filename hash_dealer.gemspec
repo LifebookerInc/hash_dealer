@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Langevin"]
-  s.date = %q{2011-08-25}
+  s.date = %q{2011-08-26}
   s.description = %q{Like Factory Girl but for Hashes only}
   s.email = %q{dan.langevin@lifebooker.com}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/hash_dealer.rb",
     "lib/matcher.rb",
     "lib/path_string.rb",
+    "lib/variable_array.rb",
     "spec/lib/hash_dealer_spec.rb",
     "spec/lib/matcher_spec.rb",
     "spec/lib/path_string_spec.rb",
