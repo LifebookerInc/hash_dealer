@@ -130,4 +130,15 @@ describe HashDealer do
     HashDealer.roll(:test)[:attributes].should eql("test")
     HashDealer.roll(:test).matcher[:attributes].should eql(":test")
   end
+  
+  it "should allow the use of a HashDealer in the definition of another before the first is defined" do
+    HashDealer.define(:b) do
+      hash_a(HashDealer.roll(:a))
+    end
+    HashDealer.define(:a) do
+      a("123")
+    end
+    HashDealer.roll(:b).should eql({:hash_a => {:a => "123"}})
+  end
+  
 end

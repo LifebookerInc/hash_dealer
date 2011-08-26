@@ -14,11 +14,12 @@ class HashDealer
   
   # define a method of the request factory
   def self.define(name, opts = {},  &block)
-    self.hashes[name] = self.new(opts, &block)
+    self.hashes[name] = [opts, block]
   end
   
   def self.roll(name, *args)
     raise Exception.new("No HashDealer called #{name}") unless self.hashes[name]
+    self.hashes[name] = self.new(self.hashes[name][0], &self.hashes[name][1]) unless self.hashes[name].is_a?(HashDealer)
     self.hashes[name]._attributes(*args)
   end
   
