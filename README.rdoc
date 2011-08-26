@@ -1,8 +1,90 @@
-= hash_factory
+= hash_dealer
 
-Description goes here.
+== A library for creating reusable, extendable Hash-like objects for testing
 
-== Contributing to hash_factory
+== Defining HashDealers
+
+Everyone has a favorite Hash Dealer - here is how you create your template.  Note that any method can be used in your definition
+
+  HashDealer.define(:variable) do
+    a("test_a")
+    b("test_b")
+  end
+  
+Once you have your HashDealer - ask him to roll one up for you
+  
+  HashDealer.roll(:variable) => {:a => "test_a", :b => "test_b"}
+  
+If you'd like to customize your Hash - just pass in some options
+
+  HashDealer.roll(:variable, :a => "My own Kief") => {:a => "My own Kief", :b => "test_b"}
+  
+=== Dynamic Hashes
+
+Sometimes you'd like dynamic values for your Hash - or to use another HashDealer that you want to be dynamic - to do so, use a block inside your HashDealer definition
+
+  HashDealer.define(:dynamic) do
+    abc {Kernel.rand(100)}
+  end
+  
+  HashDealer.roll(:dynamic) => {:abc => 12}
+  HashDealer.roll(:dynamic) => {:abc => 32}
+  
+=== Nested Hashes
+HashDealer does not evaluate your defined Hashes until they are called - so you can use other HashDealers that are not yet loaded in your HashDealer definitions
+
+  HashDealer.define(:b) do
+    hash_a(HashDealer.roll(:a))
+  end
+
+  HashDealer.define(:a) do
+    a("123")
+  end
+  
+  HashDealer.roll(:b) => {:hash_a => {:a => "123"}}
+  
+=== Inheritance
+
+HashDealers can inherit from one another using the :parent option in their definitions
+
+  HashDealer.define(:variable_2, :parent => :variable) do
+    a("variable_2")
+    my_var("abc")
+  end
+  
+  HashDealer.roll(:variable_2) => {:a => "variable_2", :b => "test_b", :my_var => "abc"}
+  
+=== Elements other than Hashes
+Sometimes you need to ask your dealer for something other than Hash - just define a root element 
+
+  HashDealer.define(:crack) do
+    root([1,2,3])
+  end
+  
+  HashDealer.roll(:crack) => [1,2,3]
+
+== Rspec Matchers
+
+One goal of HashDealer is to allow you to define dynamic matchers to ensure that JSON responses from interfacing APIs follow a consistent format
+
+E.g.
+
+  response = {:id => 1, :name => "My Name", :email => "dan.langevin@lifebooker.com"}
+  {:id => 1, :name => ":name", :email => ":email"}.matcher.should match_response(response)
+  
+We don't care about the actual content of the fields, just that they are of the same type (generally) and that the hashes have the same fields
+
+Similarly
+  
+  response = [{:id => 1, :name => "My Name", :email => "dan.langevin@lifebooker.com"}, {:id => 2, :name => "Another Developer", :email => "wbartosch@lifebooker.com"}]
+  [{:id => 1, :name => ":name", :email => ":email"}].matcher.should match_response(response)
+
+We don't care how many elements there are in the array (we might get back 100 records from our test), just that they have the correct format
+
+=== The matcher method
+To achieve this, we use the .matcher method, which is defined on a Hash, String, Numeric and Array and should match_response(x) as an Rspec Matcher
+
+== Contributing to hash_dealer
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
@@ -14,6 +96,6 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2011 Dan Langevin. See LICENSE.txt for
+Copyright (c) 2011 Lifebooker, Inc. See LICENSE.txt for
 further details.
 
