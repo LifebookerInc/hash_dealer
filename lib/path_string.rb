@@ -34,9 +34,9 @@ class PathString < String
   
   # helper method to be called recursively
   def self.sort_json(val)
-    val = val.is_a?(String) ? ActiveSupport::JSON.decode(val).sort : ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(val)).sort
+    val = val.is_a?(String) ? ActiveSupport::JSON.decode(val) : ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(val))
     val = val.collect{|v| v.collect{|n| n.is_a?(Hash) ? self.sort_json(n) : n}}
-    val
+    val.sort
   end
   
   # 

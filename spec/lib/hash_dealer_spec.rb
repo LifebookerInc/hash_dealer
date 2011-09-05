@@ -141,4 +141,8 @@ describe HashDealer do
     HashDealer.roll(:b).should eql({:hash_a => {:a => "123"}})
   end
   
+  it "should allow nested blocks of attributes" do
+    HashDealer.roll(:b).should eql({:hash_a => {:a => "123"}})
+  end
+  
 end

@@ -1,3 +1,12 @@
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter 'spec'
+end
+
+SimpleCov.at_exit do
+  SimpleCov.result.format!
+end
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'bundler'

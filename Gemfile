@@ -14,4 +14,5 @@ group :development do
   gem "rcov"
   gem "guard-rspec", "=0.4.0"
   gem "ruby-debug19", :require => "ruby-debug"
+  gem "simplecov"
 end

@@ -22,7 +22,12 @@ RSpec::Matchers.define(:match_list) do |actual|
   
   def normalize(val)
     val = JSON.parse(val) if val.is_a?(String)
-    val = val.first if val.is_a?(Array)
+    # if it's an array, we want just the first value   
+    if val.is_a?(Array)
+      # we append :matcher to account for variable length arrays - that causes a problem
+      # when the array is at the root and we are looking for the first element
+      val = val.first == ":matcher" ? val[1] : val.first 
+    end
     val
   end
   

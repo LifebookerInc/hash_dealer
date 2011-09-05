@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe "match_resonse Matcher" do
+describe "match_response Matcher" do
 
   it "should match hashes" do
     {:a => "b"}.should match_response({"a" => ":test"})
@@ -12,6 +12,10 @@ describe "match_resonse Matcher" do
   
   it "should match the first element in a list" do
     {"a" => ":b"}.should match_list([{"a" => "test"}, {"a" => "test2"}])
+  end
+  
+  it "should account for the first :matcher param when it's at the root" do
+    JSON.unparse([{"a" => "b"}, {"a" => "c"}]).should match_list({"a" => ":b"})
   end
   
   it "should match using wildcards for variable length arrays" do
