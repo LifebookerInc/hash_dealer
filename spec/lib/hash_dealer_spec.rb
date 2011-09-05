@@ -51,33 +51,68 @@ describe HashDealer do
     HashDealer.roll(:variable, {"abc" => "123"})[:abc].should eql("123")
   end
   
-  it "should extend itself to matchers - preventing us from having to re-define them" do
-    HashDealer.define(:variable) do
-      abc("test")
-      val({
-        :k => "v"
-      })
-    end
-    String.new(HashDealer.roll(:variable).matcher[:abc]).should eql ":test"
-    String.new(HashDealer.roll(:variable).matcher[:val][:k]).should eql ":v"
-  end
+  context "Matchers" do
   
-  it "should not alter fields passed into the matcher method in the except array" do
-    HashDealer.define(:variable) do
-      a("test_a")
-      b("test_b")
+    it "should extend itself to matchers - preventing us from having to re-define them" do
+      HashDealer.define(:variable) do
+        abc("test")
+        val({
+          :k => "v"
+        })
+      end
+      String.new(HashDealer.roll(:variable).matcher[:abc]).should eql ":test"
+      String.new(HashDealer.roll(:variable).matcher[:val][:k]).should eql ":v"
     end
-    HashDealer.roll(:variable).matcher(:except => [:b])[:a].should eql(":test_a")
-    HashDealer.roll(:variable).matcher(:except => [:b])[:b].should eql("test_b")
-  end
   
-  it "should only alter fields passed into the matcher method in the the only array" do
-    HashDealer.define(:variable) do
-      a("test_a")
-      b("test_b")
+    it "should not alter fields passed into the matcher method in the except array" do
+      HashDealer.define(:variable) do
+        a("test_a")
+        b("test_b")
+      end
+      HashDealer.roll(:variable).matcher(:except => [:b])[:a].should eql(":test_a")
+      HashDealer.roll(:variable).matcher(:except => [:b])[:b].should eql("test_b")
     end
-    HashDealer.roll(:variable).matcher(:only => [:b])[:a].should eql("test_a")
-    HashDealer.roll(:variable).matcher(:only => [:b])[:b].should eql(":test_b")
+  
+    it "should only alter fields passed into the matcher method in the the only array" do
+      HashDealer.define(:variable) do
+        a("test_a")
+        b("test_b")
+      end
+      HashDealer.roll(:variable).matcher(:only => [:b])[:a].should eql("test_a")
+      HashDealer.roll(:variable).matcher(:only => [:b])[:b].should eql(":test_b")
+    end
+    
+    it "should create a wrapper for times and dates" do
+      HashDealer.define(:variable) do
+        time_test(Time.now)
+        date_test(Date.today)
+      end
+      
+      time_test = HashDealer.roll(:variable).matcher[:time_test]
+      date_test =  HashDealer.roll(:variable).matcher[:date_test]
+      
+      time_test.should be_instance_of TimeDateMatcher
+      date_test.should be_instance_of TimeDateMatcher
+      
+      time_test.should eql (Time.now - 1000)
+      time_test.should_not eql (Date.today)
+      date_test.should eql (Date.today)
+      date_test.should_not eql (Time.now)
+      
+      # check the reverse too
+      (Time.now - 1000).should eql(time_test)
+      (Time.now - 1000).should == time_test
+      (Date.today).should_not eql(time_test)
+      (Date.today).should_not == time_test
+      
+      # regular behavior should be unaffected
+      t = Time.now
+      t.should eql t.clone
+      t.should == t.clone
+      
+      
+    end
+    
   end
   
   it "should apply except/only to nested values if they are defined by hash dealer and specified" do

@@ -5,6 +5,40 @@ class Object
   end
 end
 
+class TimeDateMatcher
+  attr_reader :instance
+  def initialize(instance)
+    @instance = instance
+  end
+  def ==(other)
+    self.instance.class == other.class
+  end
+  alias_method :eql?, :==
+end
+
+# including a module didn't work here - not sure why though
+[Time, DateTime, Date].each do |klass|
+  klass.class_eval <<-EOE, __FILE__, __LINE__ + 1
+    def matcher(opts = {})
+      TimeDateMatcher.new(self)
+    end
+
+    alias_method :old_eql?, :eql?
+    alias_method :old_equals_equals, :==
+
+    def ==(other)
+      return other == self if other.is_a?(TimeDateMatcher)
+      return old_equals_equals(other)
+    end
+
+    def eql?(other)
+      return other.eql?(self) if other.is_a?(TimeDateMatcher)
+      return old_eql?(other)
+    end
+    
+  EOE
+end
+
 class Numeric
   def matcher(opts={})
     PathString.new(":#{self}")
