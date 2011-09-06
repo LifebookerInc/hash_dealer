@@ -104,8 +104,9 @@ class Array
   end
   # call matcher on all of the elements
   def matcher(opts = {})
-    self.unshift(":matcher")
-    VariableArray.new(self.collect(&:matcher))
+    klone = self.clone
+    klone.unshift(":matcher")
+    VariableArray.new(klone.collect(&:matcher))
   end
   # we want this to apply to both :eql? and ==
   alias_method :eql?, :==

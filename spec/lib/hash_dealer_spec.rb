@@ -113,6 +113,14 @@ describe HashDealer do
       
     end
     
+    it "should not modify the element when returning a matcher" do
+      HashDealer.define(:array) do
+        my_array([1,2,3])
+      end
+      HashDealer.roll(:array).matcher[:my_array].should eql ([":matcher",1,2,3])
+      HashDealer.roll(:array)[:my_array].should eql ([1,2,3])
+    end
+    
   end
   
   it "should apply except/only to nested values if they are defined by hash dealer and specified" do
@@ -179,5 +187,7 @@ describe HashDealer do
   it "should allow nested blocks of attributes" do
     HashDealer.roll(:b).should eql({:hash_a => {:a => "123"}})
   end
+  
+
   
 end
