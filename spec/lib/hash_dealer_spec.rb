@@ -1,3 +1,4 @@
+require 'json'
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe HashDealer do
@@ -110,6 +111,17 @@ describe HashDealer do
       t.should eql t.clone
       t.should == t.clone
       
+      
+    end
+    
+    it "should match dates and times from JSON" do
+      HashDealer.define(:var) do
+        id("1")
+        created_at(Time.now)
+        updated_at(Time.now)
+      end
+      
+      JSON.unparse({:created_at => Time.now, :updated_at => Time.now, :id => 1}).should match_response(HashDealer.roll(:var).matcher)
       
     end
     

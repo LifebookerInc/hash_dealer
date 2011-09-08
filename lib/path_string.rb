@@ -34,8 +34,10 @@ class PathString < String
   
   # helper method to be called recursively
   def self.sort_json(val)
-    val = val.is_a?(String) ? ActiveSupport::JSON.decode(val) : ActiveSupport::JSON.decode(ActiveSupport::JSON.encode(val))
-    val = val.collect{|v| v.collect{|n| n.is_a?(Hash) ? self.sort_json(n) : n}}
+    return val if val.is_a?(TimeDateMatcher)
+    val = ActiveSupport::JSON.decode(val) if val.is_a?(String)
+    val = self.stringify_keys(val) if val.is_a?(Hash)
+    val = val.collect{|v| v.collect{|n| n.is_a?(Hash) ? self.sort_json(n) : n}} if val.is_a?(Array)
     val.sort
   end
   
@@ -60,6 +62,15 @@ class PathString < String
   end
   
   private
+  
+  def self.stringify_keys(hash)
+    new_hash = {}
+    hash.each_pair do |k,v|
+      new_hash[k.to_s] = v.is_a?(Hash) ? self.stringify_keys(v) : v
+    end
+    new_hash
+  end
+  
   def self.get_zipped_array(known_path, entered_path)
     # make these strings
     known_path, entered_path = known_path.to_s, entered_path.to_s

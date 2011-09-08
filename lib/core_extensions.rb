@@ -11,6 +11,13 @@ class TimeDateMatcher
     @instance = instance
   end
   def ==(other)
+    if other.is_a?(String)
+      begin
+        other = self.instance.class.parse(other)
+      rescue => e
+        return false
+      end
+    end
     self.instance.class == other.class
   end
   alias_method :eql?, :==
