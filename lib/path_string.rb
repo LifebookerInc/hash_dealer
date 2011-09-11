@@ -61,14 +61,47 @@ class PathString < String
     return params
   end
   
+  def self.diff(a,b)
+    a, b = self.as_sorted_json(a), self.as_sorted_json(b)
+    diff = []
+    a.each_index do |i|
+      unless a[i] == b[i]
+        diff << {:expected => a[i], :got => b[i]}
+      end
+    end
+    diff
+  end
+  
+  
   private
   
   def self.stringify_keys(hash)
-    new_hash = {}
+    new_hash = hash.class.new
     hash.each_pair do |k,v|
-      new_hash[k.to_s] = v.is_a?(Hash) ? self.stringify_keys(v) : v
+      new_hash[k.to_s] = case v
+        when Hash
+          self.stringify_keys(v)
+        when Array
+          self.stringify_array_keys(v)
+        else
+         v 
+      end
     end
     new_hash
+  end
+  
+  # 
+  def self.stringify_array_keys(array)
+    array.collect{|v|
+      case v
+        when Hash
+          self.stringify_keys(v)
+        when Array
+          self.stringify_array_keys(v)
+        else
+          v
+      end
+    }
   end
   
   def self.get_zipped_array(known_path, entered_path)

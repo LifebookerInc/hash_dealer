@@ -9,11 +9,11 @@ RSpec::Matchers.define(:match_response) do |actual|
   end
   
   failure_message_for_should do |container|
-    "expected #{PathString.as_sorted_json(actual).pretty_inspect}\n to equal\n #{PathString.as_sorted_json(container).pretty_inspect}"
+    "expected #{PathString.as_sorted_json(actual).pretty_inspect}\n to equal\n #{PathString.as_sorted_json(container).pretty_inspect} \n\n Diff: \n #{PathString.diff(container, actual)}"
   end
   
   failure_message_for_should_not do |container|
-    "expected #{PathString.as_sorted_json(actual).pretty_inspect}\n not to equal\n #{PathString.as_sorted_json(container).pretty_inspect}"
+    "expected #{PathString.as_sorted_json(actual).pretty_inspect}\n not to equal\n #{PathString.as_sorted_json(container).pretty_inspect} \n\n Diff: \n #{PathString.diff(container, actual)}"
   end
 end
 
@@ -36,11 +36,11 @@ RSpec::Matchers.define(:match_list) do |actual|
   end
     
   failure_message_for_should do |container|
-    "expected #{PathString.as_sorted_json(normalize(actual))}\n to equal\n #{PathString.as_sorted_json(normalize(container))}"
+    "expected #{PathString.as_sorted_json(normalize(actual))}\n to equal\n #{PathString.as_sorted_json(normalize(container))} \n\n Diff: \n #{PathString.diff(container, actual)}"
   end
   
   failure_message_for_should_not do |container|
-    "expected #{PathString.as_sorted_json(normalize(actual))}\n not to equal\n #{PathString.as_sorted_json(normalize(container))}"
+    "expected #{PathString.as_sorted_json(normalize(actual))}\n not to equal\n #{PathString.as_sorted_json(normalize(container))} \n\n Diff: \n #{PathString.diff(container, actual)}"
   end
   
 end

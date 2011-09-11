@@ -1,3 +1,4 @@
+require 'json'
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe "match_response Matcher" do
@@ -21,6 +22,11 @@ describe "match_response Matcher" do
   it "should match using wildcards for variable length arrays" do
     {"a" => ["a"]}.matcher.should match_response({"a" => ["a", "b", "c", "d"]})
     {"a" => [{"a" => "b"}]}.matcher.should match_response({"a" => [{"a" => "c"},{"a" => "x"},{"a" => "y"}]})
+  end
+  
+  it "should stringify keys so it matches symbols to strings" do
+    {:a => "a"}.matcher.should match_response({"a" => "abcde"})
+    {:a => {:b => "c"}}.should match_response({"a" => {"b" => "c"}})
   end
   
 end
