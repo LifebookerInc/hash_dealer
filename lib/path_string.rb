@@ -36,7 +36,7 @@ class PathString < String
   def self.sort_json(val)
     return val if val.is_a?(TimeDateMatcher)
     val = ActiveSupport::JSON.decode(val) if val.is_a?(String)
-    val = self.stringify_keys(val) if val.is_a?(Hash)
+    val = self.stringify_keys(val).sort if val.is_a?(Hash)
     val = val.collect{|v| v.collect{|n| n.is_a?(Hash) ? self.sort_json(n) : n}} if val.is_a?(Array)
     val.sort
   end

@@ -37,4 +37,22 @@ describe PathString do
     PathString.paths_match?("/a/1/test/2", "/a/:1/test/:2").should be_true
   end
   
+  it "should actually sort things with as_sorted_json" do
+    a = [["user_login",
+      {"user_name"=>"username",
+       "user_type"=>"Client",
+       "user_id"=>37,
+       "password"=>"123456",
+       "password_confirmation"=>"123456"}]]
+    b = {:user_login=>
+      {:password=>":password",
+       :password_confirmation=>":password_conf",
+       :user_id=>":id",
+       :user_name=>":username",
+       :user_type=>"Client"}}
+       
+    PathString.as_sorted_json(a).should == PathString.as_sorted_json(b)
+  end
+  
+  
 end
