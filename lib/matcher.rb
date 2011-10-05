@@ -2,6 +2,18 @@
 require 'rspec'
 require 'pp'
 
+
+def print_diff(diff, depth = 1)
+  puts "#{"\t" * depth}" + "HashDealer::#{diff.first.to_s}".bold.cyan + "\tResponse::#{diff.last.to_s}".bold.yellow if diff.is_a?(Array)
+  if diff.is_a?(Hash)
+    diff.each_pair do |k, v|
+      puts "\n"
+      puts (("\t" * depth) + k).red
+      print_diff(v, depth + 1)
+    end
+  end
+end
+
 RSpec::Matchers.define(:match_response) do |actual|
   
   actual = Comparator.normalize_value(actual)
@@ -13,11 +25,17 @@ RSpec::Matchers.define(:match_response) do |actual|
   end
   
   failure_message_for_should do |container|
-    @diff.pretty_inspect
+    puts "\n"
+    print_diff(@diff)
+    puts "\n"
+    ""
   end
   
   failure_message_for_should_not do |container|
-    @diff.pretty_inspect
+    puts "\n"
+    print_diff(@diff)
+    puts "\n"
+    ""
   end
 end
 
@@ -35,11 +53,17 @@ RSpec::Matchers.define(:match_list) do |actual|
   end
     
   failure_message_for_should do |container|
-    @diff.pretty_inspect
+    puts "\n"
+    print_diff(@diff)
+    puts "\n"
+    ""
   end
   
   failure_message_for_should_not do |container|
-    @diff.pretty_inspect
+    puts "\n"
+    print_diff(@diff)
+    puts "\n"
+    ""
   end
   
 end

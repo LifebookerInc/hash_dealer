@@ -73,6 +73,10 @@ class String
   alias_method "==_without_path_string", :==
   alias_method :==, "==_with_path_string"
   alias_method :eql?, :==
+  # make a string bold
+  def bold
+    "\033[1m#{self}"
+  end
 end
 
 class Hash
