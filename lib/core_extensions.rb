@@ -46,6 +46,38 @@ end
   EOE
 end
 
+class BooleanMatcher
+  attr_reader :instance
+  def initialize(instance)
+    @instance = instance
+  end
+  def ==(other)
+    return (other.is_a?(TrueClass) || other.is_a?(FalseClass) || other.is_a?(BooleanMatcher))
+  end
+  alias_method :eql?, :==
+end
+
+[TrueClass, FalseClass].each do |klass|
+  klass.class_eval <<-EOE, __FILE__, __LINE__ +1
+    def matcher(opts={})
+      BooleanMatcher.new(self)
+    end
+  
+    alias_method :old_eql?, :eql?
+    alias_method :old_equals_equals, :==
+  
+    def ==(other)
+      return other == self if other.is_a?(BooleanMatcher)
+      return self.old_equals_equals(other)
+    end
+  
+    def eql?(other)
+      return other.eql?(self) if other.is_a?(BooleanMatcher)
+      return self.old_eql?(other)
+    end
+  EOE
+end
+
 class Numeric
   def matcher(opts={})
     PathString.new(":#{self}")

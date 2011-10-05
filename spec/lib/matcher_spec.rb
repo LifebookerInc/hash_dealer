@@ -48,4 +48,10 @@ describe "match_response Matcher" do
     Comparator.normalize_value({:x => [[{:y => "z"}]]})["x"].first.first["y"].should eql "z"
   end
   
+  it "should convert booleans to a matcher class that evaluates to either true or false" do
+    {"a" => true}.matcher.should match_response({"a" => false})
+    {"a" => {"b" => false}}.matcher.should match_response({"a" => {"b" => false}})
+  end
+  
+  
 end
