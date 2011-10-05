@@ -8,15 +8,16 @@ RSpec::Matchers.define(:match_response) do |actual|
   
   match do |expected|
     expected = Comparator.normalize_value(expected)
-    Comparator.diff(actual, expected) == {}
+    @diff = Comparator.diff(actual, expected)
+    @diff == {}
   end
   
   failure_message_for_should do |container|
-    Comparator.diff(actual, expected).pretty_inspect
+    @diff.pretty_inspect
   end
   
   failure_message_for_should_not do |container|
-    Comparator.diff(actual, expected).pretty_inspect
+    @diff.pretty_inspect
   end
 end
 
@@ -29,15 +30,16 @@ RSpec::Matchers.define(:match_list) do |actual|
     expected = Comparator.normalize_value(expected)
     expected = expected.first if expected.is_a?(Array)
     actual = actual.first if actual.is_a?(Array)
-    Comparator.diff(actual, expected) == {}
+    @diff = Comparator.diff(actual, expected)
+    @diff == {}
   end
     
-  failure_message_for_should do |container|
-    Comparator.diff(actual, expected).pretty_inspect
+  ffailure_message_for_should do |container|
+    @diff.pretty_inspect
   end
   
   failure_message_for_should_not do |container|
-    Comparator.diff(actual, expected).pretty_inspect
+    @diff.pretty_inspect
   end
   
 end
