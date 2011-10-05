@@ -61,8 +61,18 @@ end
 class String
   def matcher(opts = {})
     # if we have a leading : or a /:xyz - a matcher is already defined
-    self =~ /(^:|\/:)/ ? self : ":#{self}"
+    self =~ /(^:|\/:)/ ? PathString.new(self) : PathString.new(":#{self}")
   end
+  define_method "==_with_path_string" do |other|
+    if other.is_a?(PathString)
+      return true if self.is_a?(PathString)
+      return other == self 
+    end
+    return self.send("==_without_path_string", other)
+  end
+  alias_method "==_without_path_string", :==
+  alias_method :==, "==_with_path_string"
+  alias_method :eql?, :==
 end
 
 class Hash

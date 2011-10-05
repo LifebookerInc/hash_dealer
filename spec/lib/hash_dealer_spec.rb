@@ -121,7 +121,7 @@ describe HashDealer do
         updated_at(Time.now)
       end
       
-      JSON.unparse({:created_at => Time.now, :updated_at => Time.now, :id => 1}).should match_response(HashDealer.roll(:var).matcher)
+      ActiveSupport::JSON.encode({:created_at => Time.now, :updated_at => Time.now, :id => 1}).should match_response(HashDealer.roll(:var).matcher)
       
     end
     
