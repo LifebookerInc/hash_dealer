@@ -34,7 +34,7 @@ RSpec::Matchers.define(:match_list) do |actual|
     @diff == {}
   end
     
-  ffailure_message_for_should do |container|
+  failure_message_for_should do |container|
     @diff.pretty_inspect
   end
   
