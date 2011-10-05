@@ -1,3 +1,5 @@
+require 'colorize'
+
 require File.expand_path('../path_string', __FILE__)
 require File.expand_path('../variable_array', __FILE__)
 require File.expand_path('../core_extensions', __FILE__)

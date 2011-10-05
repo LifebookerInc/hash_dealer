@@ -5,7 +5,7 @@ class Comparator
   def self.normalize_value(val)
     return val if val.is_a?(TimeDateMatcher)
     val = ActiveSupport::JSON.decode(val) if val.is_a?(String)
-    val = val.stringify_keys if val.is_a?(Hash)
+    val = self.stringify_keys(val) if val.is_a?(Hash)
     val = val.collect{|v| v.is_a?(Hash) || n.is_a?(Array) ? self.normalize_value(v) : v} if val.is_a?(Array)
     val
   end
@@ -31,12 +31,6 @@ class Comparator
       unless obj1[key] == obj2[key]
         if obj1[key].kind_of?(Hash) && obj2[key].kind_of?(Hash)
           memo[key] = self.diff(obj1[key],obj2[key])
-        elsif obj1[key].kind_of?(Array) && obj2[key].kind_of?(Array)
-          memo[key] = [].tap do |arr|
-            obj1[key].each_index do |i|
-              arr << self.diff(obj1[key][i], obj2[key][i])
-            end
-          end
         else
           memo[key] = self.diff(obj1[key], obj2[key]) 
         end
@@ -45,12 +39,12 @@ class Comparator
     end
   end
   
-  def self.stringify_keys(hash)
+  def self.stringify_keys(hash_or_array)
+    return hash_or_array.collect{|v| v.is_a?(Hash) || v.is_a?(Array) ? self.stringify_keys(v) : v} if hash_or_array.is_a?(Array)
     {}.tap do |ret|
-      hash.keys.each do |k|
-        ret[k.to_s] = hash[k].is_a?(Hash) ? self.stringify_keys(hash[k]) : hash[k]
+      hash_or_array.each_pair.each do |k, v|
+        ret[k.to_s] = v.is_a?(Hash) || v.is_a?(Array) ? self.stringify_keys(v) : v
       end
     end
   end
-    
 end

@@ -44,4 +44,8 @@ describe "match_response Matcher" do
     Comparator.diff({"a" => "dkddk"}, {"a" => "test"}.matcher).should eql({})
   end
   
+  it "should recursively set hash keys to strings" do
+    Comparator.normalize_value({:x => [[{:y => "z"}]]})["x"].first.first["y"].should eql "z"
+  end
+  
 end

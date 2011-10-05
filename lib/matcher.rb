@@ -8,7 +8,7 @@ def print_diff(diff, depth = 1)
   if diff.is_a?(Hash)
     diff.each_pair do |k, v|
       puts "\n"
-      puts (("\t" * depth) + k).red
+      puts (("\t" * depth) + k.to_s).red
       print_diff(v, depth + 1)
     end
   end
