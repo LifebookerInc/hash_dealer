@@ -5,6 +5,7 @@ source "http://rubygems.org"
 
 gem "activesupport", :require => "active_support"
 gem "i18n"
+gem "colorize"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
