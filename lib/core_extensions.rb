@@ -11,6 +11,9 @@ class TimeDateMatcher
     @instance = instance
   end
   def ==(other)
+    # allow nils to match
+    return true if other.nil?
+    # attempt to parse any strings
     if other.is_a?(String)
       begin
         other = self.instance.class.parse(other)

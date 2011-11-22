@@ -83,47 +83,57 @@ describe HashDealer do
       HashDealer.roll(:variable).matcher(:only => [:b])[:b].should eql(":test_b")
     end
     
-    it "should create a wrapper for times and dates" do
-      HashDealer.define(:variable) do
-        time_test(Time.now)
-        date_test(Date.today)
+    context "Dates and Times" do
+      before(:all) do
+        HashDealer.define(:variable) do
+          time_test(Time.now)
+          date_test(Date.today)
+        end
+        HashDealer.define(:var) do
+          id("1")
+          created_at(Time.now)
+          updated_at(Time.now)
+        end
       end
-      
-      time_test = HashDealer.roll(:variable).matcher[:time_test]
-      date_test =  HashDealer.roll(:variable).matcher[:date_test]
-      
-      time_test.should be_instance_of TimeDateMatcher
-      date_test.should be_instance_of TimeDateMatcher
-      
-      time_test.should eql (Time.now - 1000)
-      time_test.should_not eql (Date.today)
-      date_test.should eql (Date.today)
-      date_test.should_not eql (Time.now)
-      
-      # check the reverse too
-      (Time.now - 1000).should eql(time_test)
-      (Time.now - 1000).should == time_test
-      (Date.today).should_not eql(time_test)
-      (Date.today).should_not == time_test
-      
-      # regular behavior should be unaffected
-      t = Time.now
-      t.should eql t.clone
-      t.should == t.clone
-      
+      it "should create a wrapper for times and dates" do
+
+
+        time_test = HashDealer.roll(:variable).matcher[:time_test]
+        date_test =  HashDealer.roll(:variable).matcher[:date_test]
+
+        time_test.should be_instance_of TimeDateMatcher
+        date_test.should be_instance_of TimeDateMatcher
+
+        time_test.should eql (Time.now - 1000)
+        time_test.should_not eql (Date.today)
+        date_test.should eql (Date.today)
+        date_test.should_not eql (Time.now)
+
+        # check the reverse too
+        (Time.now - 1000).should eql(time_test)
+        (Time.now - 1000).should == time_test
+        (Date.today).should_not eql(time_test)
+        (Date.today).should_not == time_test
+
+        # regular behavior should be unaffected
+        t = Time.now
+        t.should eql t.clone
+        t.should == t.clone
+
+
+      end
+
+      it "should match dates and times from JSON" do
+        ActiveSupport::JSON.encode({:created_at => Time.now, :updated_at => Time.now, :id => 1}).should match_response(HashDealer.roll(:var).matcher)
+      end
+
+      it "should allow dates and times to be null" do
+        ActiveSupport::JSON.encode({:created_at => nil, :updated_at => nil, :id => 1}).should match_response(HashDealer.roll(:var).matcher)
+      end
       
     end
     
-    it "should match dates and times from JSON" do
-      HashDealer.define(:var) do
-        id("1")
-        created_at(Time.now)
-        updated_at(Time.now)
-      end
-      
-      ActiveSupport::JSON.encode({:created_at => Time.now, :updated_at => Time.now, :id => 1}).should match_response(HashDealer.roll(:var).matcher)
-      
-    end
+    
     
     it "should not modify the element when returning a matcher" do
       HashDealer.define(:array) do

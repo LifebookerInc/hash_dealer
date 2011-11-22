@@ -52,6 +52,4 @@ describe "match_response Matcher" do
     {"a" => true}.matcher.should match_response({"a" => false})
     {"a" => {"b" => false}}.matcher.should match_response({"a" => {"b" => false}})
   end
-  
-  
 end
