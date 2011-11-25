@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "hash_dealer"
-  s.version = "1.4.5"
+  s.version = "1.4.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Langevin"]
-  s.date = "2011-11-22"
+  s.date = "2011-11-25"
   s.description = "Like Factory Girl but for Hashes only"
   s.email = "dan.langevin@lifebooker.com"
   s.extra_rdoc_files = [
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     ".document",
     ".rspec",
     "Gemfile",
+    "Gemfile.lock",
     "Guardfile",
     "LICENSE.txt",
     "README.rdoc",
