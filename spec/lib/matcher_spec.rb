@@ -52,4 +52,10 @@ describe "match_response Matcher" do
     {"a" => true}.matcher.should match_response({"a" => false})
     {"a" => {"b" => false}}.matcher.should match_response({"a" => {"b" => false}})
   end
+  
+  it "should return a diff when either argument is missing a key" do
+    Comparator.diff({"a" => true, "b" => false}, {"a" => true}).should eql({"b" => [false, nil]})
+    Comparator.diff({"a" => true}, {"a" => true, "b" => false}).should eql({"b" => [nil, false]})
+  end
+  
 end
