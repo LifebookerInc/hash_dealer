@@ -32,7 +32,7 @@ describe "match_response Matcher" do
   
   it "should provide meaningful diffs" do
     diff = Comparator.diff({:a => {:b => "c", :d => "e"}}, {:a => {:b => "d", :d => "e"}, :b => "test"})
-    diff.should eql({"a" => {"b" => ["c", "d"]}, "b" => [nil, "test"]})
+    diff.should eql({"a" => {"b" => ["c", "d"]}, "b" => ["KEY MISSING", "test"]})
   end
   
   it "should match hashes regardless of the order of the keys" do
@@ -54,8 +54,8 @@ describe "match_response Matcher" do
   end
   
   it "should return a diff when either argument is missing a key" do
-    Comparator.diff({"a" => true, "b" => false}, {"a" => true}).should eql({"b" => [false, nil]})
-    Comparator.diff({"a" => true}, {"a" => true, "b" => false}).should eql({"b" => [nil, false]})
+    Comparator.diff({"a" => true, "b" => false}, {"a" => true}).should eql({"b" => [false, "KEY MISSING"]})
+    Comparator.diff({"a" => true}, {"a" => true, "b" => false}).should eql({"b" => ["KEY MISSING", false]})
   end
   
 end

@@ -4,7 +4,7 @@ require 'pp'
 
 
 def print_diff(diff, depth = 1)
-  puts "#{"\t" * depth}" + "HashDealer::#{diff.first.to_s}".bold.cyan + "\tResponse::#{diff.last.to_s}".bold.yellow if diff.is_a?(Array)
+  puts "#{"\t" * depth}" + "HashDealer::#{diff.first.to_s}".bold.cyan + "\t\t\t\tResponse::#{diff.last.to_s}".bold.yellow if diff.is_a?(Array)
   if diff.is_a?(Hash)
     diff.each_pair do |k, v|
       puts "\n"

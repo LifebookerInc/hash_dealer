@@ -28,12 +28,12 @@ class Comparator
   def self.hash_diff(obj1, obj2)
     obj1, obj2 = self.stringify_keys(obj1), self.stringify_keys(obj2)
     (obj1.keys + obj2.keys).uniq.inject({}) do |memo, key|
-      unless obj1.keys.include?(key) && obj2.keys.include?(key) && obj1[key] == obj2[key]
-        if obj1[key].kind_of?(Hash) && obj2[key].kind_of?(Hash)
-          memo[key] = self.diff(obj1[key],obj2[key])
-        else
-          memo[key] = self.diff(obj1[key], obj2[key]) 
-        end
+      if !obj1.keys.include?(key) 
+        memo[key] = ["KEY MISSING", obj2[key]]
+      elsif !obj2.keys.include?(key) 
+        memo[key] = [obj1[key], "KEY MISSING"]
+      elsif obj1[key] != obj2[key]
+        memo[key] = self.diff(obj1[key], obj2[key])
       end
       memo
     end
