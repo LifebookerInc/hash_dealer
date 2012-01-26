@@ -21,7 +21,7 @@ class Comparator
   
   def self.array_diff(obj1, obj2)
     {}.tap do |ret|
-      obj1.size >= obj2.size ? bigger_arr = obj1 : bigger_arr = obj2
+      bigger_arr = obj1.size >= obj2.size ? obj1 : obj2
       bigger_arr.each_index do |k|
         ret[k] = self.diff(obj1[k], obj2[k]) unless obj1[k] == obj2[k]
       end   
