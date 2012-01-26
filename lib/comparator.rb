@@ -14,14 +14,17 @@ class Comparator
     return {} if obj1 == obj2
     return self.array_diff(obj1, obj2) if obj1.is_a?(Array) && obj2.is_a?(Array)
     return self.hash_diff(obj1, obj2) if obj1.is_a?(Hash) && obj2.is_a?(Hash)
+    return [obj1, "KEY MISSING"] if obj2.nil?
+    return ["KEY MISSING", obj2] if obj1.nil?
     return [obj1, obj2]
   end
   
   def self.array_diff(obj1, obj2)
     {}.tap do |ret|
-      obj1.each_index do |k|
+      obj1.size >= obj2.size ? bigger_arr = obj1 : bigger_arr = obj2
+      bigger_arr.each_index do |k|
         ret[k] = self.diff(obj1[k], obj2[k]) unless obj1[k] == obj2[k]
-      end
+      end   
     end
   end
   
