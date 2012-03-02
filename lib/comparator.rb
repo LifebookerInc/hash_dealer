@@ -2,6 +2,16 @@ require 'active_support/core_ext'
 
 class Comparator
   
+  def self.formatted_value(val)
+    if val.nil?
+      return "NilClass::nil"
+    elsif val == ""
+      return "''"
+    else
+      return val
+    end
+  end
+  
   def self.normalize_value(val)
     return val if val.is_a?(TimeDateMatcher)
     val = ActiveSupport::JSON.decode(val) if val.is_a?(String)
@@ -14,9 +24,9 @@ class Comparator
     return {} if obj1 == obj2
     return self.array_diff(obj1, obj2) if obj1.is_a?(Array) && obj2.is_a?(Array)
     return self.hash_diff(obj1, obj2) if obj1.is_a?(Hash) && obj2.is_a?(Hash)
-    return [obj1, "KEY MISSING"] if obj2.nil?
-    return ["KEY MISSING", obj2] if obj1.nil?
-    return [obj1, obj2]
+    return [formatted_value(obj1), "KEY MISSING"] if obj2.nil?
+    return ["KEY MISSING", formatted_value(obj2)] if obj1.nil?
+    return [formatted_value(obj1), formatted_value(obj2)]
   end
   
   def self.array_diff(obj1, obj2)
@@ -32,9 +42,9 @@ class Comparator
     obj1, obj2 = self.stringify_keys(obj1), self.stringify_keys(obj2)
     (obj1.keys + obj2.keys).uniq.inject({}) do |memo, key|
       if !obj1.keys.include?(key) 
-        memo[key] = ["KEY MISSING", obj2[key]]
+        memo[key] = ["KEY MISSING", formatted_value(obj2[key])]
       elsif !obj2.keys.include?(key) 
-        memo[key] = [obj1[key], "KEY MISSING"]
+        memo[key] = [formatted_value(obj1[key]), "KEY MISSING"]
       elsif obj1[key] != obj2[key]
         memo[key] = self.diff(obj1[key], obj2[key])
       end
