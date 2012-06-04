@@ -136,7 +136,12 @@ class Hash
       if opts[:only].include?(k.to_sym)
         ret[k] = v.matcher(opts[k.to_sym] || {})
       else
-        ret[k] = v
+        # Still try to pathify strings if this is an array or hash
+        if v.is_a?(Array) || v.is_a?(Hash)
+          ret[k] = v.pathify_strings
+        else
+          ret[k] = v
+        end
       end
     end
     ret
