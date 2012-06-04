@@ -16,7 +16,7 @@ class Comparator
     return val if val.is_a?(TimeDateMatcher)
     val = ActiveSupport::JSON.decode(val) if val.is_a?(String)
     val = self.stringify_keys(val) if val.is_a?(Hash)
-    val = val.collect{|v| v.is_a?(Hash) || n.is_a?(Array) ? self.normalize_value(v) : v} if val.is_a?(Array)
+    val = val.collect{|v| v.is_a?(Hash) || v.is_a?(Array) ? self.normalize_value(v) : v} if val.is_a?(Array)
     val
   end
   
