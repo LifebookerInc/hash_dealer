@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "hash_dealer"
-  s.version = "1.4.8"
+  s.version = "1.4.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Langevin"]
-  s.date = "2012-06-05"
+  s.date = "2012-08-02"
   s.description = "Like Factory Girl but for Hashes only"
   s.email = "dan.langevin@lifebooker.com"
   s.extra_rdoc_files = [
