@@ -209,6 +209,17 @@ describe HashDealer do
   it "should allow nested blocks of attributes" do
     HashDealer.roll(:b).should eql({:hash_a => {:a => "123"}})
   end
+
+  it "should have access to its current values when setting a value" do
+    HashDealer.define(:dynamic_values) do
+      parent_value{ "x" }
+      child_value{|record| record[:parent_value]}
+    end
+
+    data = HashDealer.roll(:dynamic_values)
+    data[:child_value].should eql("x")
+
+  end
   
 
   

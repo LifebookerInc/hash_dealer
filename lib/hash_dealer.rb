@@ -20,10 +20,11 @@ class HashDealer
     self.hashes[name] = [opts, block]
   end
   
-  def self.roll(name, *args)
+  def self.roll(name, overrides = {})
     raise Exception.new("No HashDealer called #{name}") unless self.hashes[name]
     self.hashes[name] = self.new(self.hashes[name][0], &self.hashes[name][1]) unless self.hashes[name].is_a?(HashDealer)
-    self.hashes[name]._attributes(*args)
+
+    self.hashes[name]._attributes(overrides)
   end
   
   # initializer just calls the block from within our DSL
@@ -36,21 +37,22 @@ class HashDealer
   def root(value)
     @attributes = value
   end
+
+  def [](val)
+    @attributes[val]
+  end
   
   # get the stored attributes for this HashDealer
-  def _attributes(*args)
-
+  def _attributes(overrides)
     # allows us to set a root value
     return @attributes.clone unless @attributes.is_a?(Hash)
     att = @parent ? HashDealer.roll(@parent.to_sym) : Hash.new
     @attributes.each do |k,v|
-      att[k] = v.is_a?(Proc) ? v.call(*args) : v
+      att[k] = v.is_a?(Proc) ? v.call(att.merge(overrides)) : v
     end
     # if we have a hash as the first arg, it would override the attributes
-    if args.first.is_a?(Hash)
-      args.first.each_pair do |k,v|
-        att[k.to_sym] = v if att.has_key?(k.to_sym)
-      end
+    overrides.each_pair do |k,v|
+      att[k.to_sym] = v if att.has_key?(k.to_sym)
     end
     att
   end
