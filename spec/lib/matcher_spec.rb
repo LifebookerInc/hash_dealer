@@ -30,19 +30,50 @@ describe "match_response Matcher" do
     {:a => {:b => "c"}}.should match_response({"a" => {"b" => "c"}})
   end
   
-  it "should provide meaningful diffs" do
-    diff = Comparator.diff({:a => {:b => "c", :d => "e"}}, {:a => {:b => "d", :d => "e"}, :b => "test"})
-    diff.should eql({"a" => {"b" => ["c", "d"]}, "b" => ["KEY MISSING", "test"]})
+  context ".diff" do
+
+    it "should provide meaningful diffs" do
+      h1 = {:a => {:b => "c", :d => "e"}}
+      h2 = {:a => {:b => "d", :d => "e"}, :b => "test"}
+      diff = Comparator.diff(h1, h2)
+      diff.should eql({
+        "a" => {"b" => ["c", "d"]}, 
+        "b" => ["KEY MISSING", "test"]
+      })
+    end
+
+    it "should match hashes regardless of the order of the keys" do
+      Comparator.diff({"a" => {"b" => "c", "d" => "e"}, "b" => "c"}, {:b => "c", :a => {"d" => "e", :b => "c"}}).should eql({})
+    end
+    
+    it "should use the matcher comparison inside of Comparator" do
+      Comparator.diff({"a" => "dkddk"}.matcher, {"a" => "test"}).should eql({})
+      Comparator.diff({"a" => "dkddk"}, {"a" => "test"}.matcher).should eql({})
+    end
+
+    it "should provide meaningful diffs for arrays" do
+      h1 = {
+        :a => [{"1" => "3"}]
+      }
+      h2 = {
+        :a => [{"2" => "4"}]
+      }
+      diff = Comparator.diff(h1.matcher, h2)
+      diff.should eql({
+        "a" => {
+          0 => {
+            "1" => ["3", "KEY MISSING"], 
+            "2" => ["KEY MISSING", "4"]
+          }
+        }
+      })
+      true
+    end
+
+
   end
   
-  it "should match hashes regardless of the order of the keys" do
-    Comparator.diff({"a" => {"b" => "c", "d" => "e"}, "b" => "c"}, {:b => "c", :a => {"d" => "e", :b => "c"}}).should eql({})
-  end
   
-  it "should use the matcher comparison inside of Comparator" do
-    Comparator.diff({"a" => "dkddk"}.matcher, {"a" => "test"}).should eql({})
-    Comparator.diff({"a" => "dkddk"}, {"a" => "test"}.matcher).should eql({})
-  end
   
   it "should recursively set hash keys to strings" do
     Comparator.normalize_value({:x => [[{:y => "z"}]]})["x"].first.first["y"].should eql "z"
