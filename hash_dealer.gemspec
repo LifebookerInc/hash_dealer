@@ -5,39 +5,19 @@
 
 Gem::Specification.new do |s|
   s.name = "hash_dealer"
-  s.version = "1.4.10"
+  s.version = "1.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Langevin"]
-  s.date = "2012-12-03"
+  s.date = "2012-12-27"
   s.description = "Like Factory Girl but for Hashes only"
   s.email = "dan.langevin@lifebooker.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
   ]
-  s.files = [
-    ".document",
-    ".rspec",
-    "Gemfile",
-    "Gemfile.lock",
-    "Guardfile",
-    "LICENSE.txt",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION",
-    "hash_dealer.gemspec",
-    "lib/comparator.rb",
-    "lib/core_extensions.rb",
-    "lib/hash_dealer.rb",
-    "lib/matcher.rb",
-    "lib/path_string.rb",
-    "lib/variable_array.rb",
-    "spec/lib/hash_dealer_spec.rb",
-    "spec/lib/matcher_spec.rb",
-    "spec/lib/path_string_spec.rb",
-    "spec/spec_helper.rb"
-  ]
+  s.files = Dir["**/*"]
+
   s.homepage = "http://github.com/LifebookerInc/hash_dealer"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
