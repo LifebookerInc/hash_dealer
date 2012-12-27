@@ -221,6 +221,24 @@ describe HashDealer do
 
   end
   
+  context "optional values" do
+
+    it "should allow values to be optionally passed in" do
+      HashDealer.define(:with_optional_values) do
+        required_value "x"
+        optional_value "y", :optional => true
+      end
+
+      hd = HashDealer.roll(:with_optional_values)
+
+      hd.should eql({:required_value => "x"})
+      hd.should eql({:required_value => "x", :optional_value => "y"})
+      hd.should_not eql({:optional_value => "y"})
+      hd.should_not eql({:required_value => "x", :bad_value => "z"})
+
+    end
+
+  end
 
   
 end

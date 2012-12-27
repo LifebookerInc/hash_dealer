@@ -5,10 +5,12 @@ require File.expand_path('../variable_array', __FILE__)
 require File.expand_path('../core_extensions', __FILE__)
 require File.expand_path('../matcher', __FILE__)
 require File.expand_path('../comparator', __FILE__)
+require File.expand_path('../hash', __FILE__)
 
 class HashDealer
   
   attr_accessor :parent
+  attr_accessor :optional_attributes
 
   # cattr_accessor
   def self.hashes
@@ -30,6 +32,7 @@ class HashDealer
   # initializer just calls the block from within our DSL
   def initialize(opts = {}, &block)
     @parent = opts[:parent]
+    @optional_attributes = []
     instance_eval(&block)
   end
   
@@ -46,7 +49,13 @@ class HashDealer
   def _attributes(overrides)
     # allows us to set a root value
     return @attributes.clone unless @attributes.is_a?(Hash)
-    att = @parent ? HashDealer.roll(@parent.to_sym) : Hash.new
+
+    if @parent.present?
+      att = HashDealer.roll(@parent.to_sym)
+    else
+      att = HashDealer::Hash.new(self.optional_attributes)
+    end
+
     @attributes.each do |k,v|
       att[k] = v.is_a?(Proc) ? v.call(att.merge(overrides)) : v
     end
@@ -60,13 +69,24 @@ class HashDealer
   protected
   
   # method missing
-  def method_missing(meth, *args, &block)
-    raise Exception.new("Please provide either a String or a block to #{meth}") unless (args.length == 1 || (args.empty? && block_given?))
+  def method_missing(meth, value = nil, opts = {}, &block)
+
+    unless value.present? || block_given?
+      raise Exception.new(
+        "Please provide either a String or a block to #{meth}"
+      )
+    end
+
+    if opts[:optional]
+      @optional_attributes << meth.to_sym
+    end
+
     @attributes ||= Hash.new
+    
     if block_given?
       @attributes[meth.to_sym] = block
     else
-      @attributes[meth.to_sym] = args.first
+      @attributes[meth.to_sym] = value
     end
   end
 end
