@@ -220,6 +220,19 @@ describe HashDealer do
     data[:child_value].should eql("x")
 
   end
+
+  context "nil and false values" do
+    it "should allow nil and false values" do
+      HashDealer.define(:with_nil_and_false_values) do
+        nil_value nil
+        false_value false
+      end
+      HashDealer.roll(:with_nil_and_false_values).should eql({
+        :nil_value => nil,
+        :false_value => false
+      })
+    end
+  end
   
   context "optional values" do
 

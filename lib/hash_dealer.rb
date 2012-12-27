@@ -69,14 +69,19 @@ class HashDealer
   protected
   
   # method missing
-  def method_missing(meth, value = nil, opts = {}, &block)
+  def method_missing(meth, *args, &block)
 
-    unless value.present? || block_given?
+    unless args.length > 0 || block_given?
       raise Exception.new(
         "Please provide either a String or a block to #{meth}"
       )
     end
-
+    # a second arg is the options hash
+    opts = args[1] || {}
+    
+    # the value is the first arg
+    value = args[0]
+    
     if opts[:optional]
       @optional_attributes << meth.to_sym
     end
