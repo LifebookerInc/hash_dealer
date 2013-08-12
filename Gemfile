@@ -12,9 +12,10 @@ gem "colorize"
 group :development do
   gem "bundler"
   gem "jeweler"
-  gem "rspec"
-  gem "rcov"
+  gem 'debugger'
+  # gem "rcov"
+  gem 'rspec'
+  gem 'rspec-core'
   gem "guard-rspec", "=0.4.0"
-  gem "ruby-debug19", :require => "ruby-debug"
   gem "simplecov"
 end

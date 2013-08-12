@@ -1,5 +1,5 @@
 # just in case it's not loaded
-require 'rspec'
+require 'rspec/core'
 require 'pp'
 
 
@@ -15,22 +15,22 @@ def print_diff(diff, depth = 1)
 end
 
 RSpec::Matchers.define(:match_response) do |actual|
-  
+
   actual = Comparator.normalize_value(actual)
-  
+
   match do |expected|
     expected = Comparator.normalize_value(expected)
     @diff = Comparator.diff(actual, expected)
     @diff == {}
   end
-  
+
   failure_message_for_should do |container|
     puts "\n"
     print_diff(@diff)
     puts "\n"
     ""
   end
-  
+
   failure_message_for_should_not do |container|
     puts "\n"
     print_diff(@diff)
@@ -41,9 +41,9 @@ end
 
 # alias as match_json
 RSpec::Matchers.define(:match_list) do |actual|
-  
+
   actual = Comparator.normalize_value(actual)
-  
+
   match do |expected|
     expected = Comparator.normalize_value(expected)
     expected = expected.first if expected.is_a?(Array)
@@ -51,19 +51,19 @@ RSpec::Matchers.define(:match_list) do |actual|
     @diff = Comparator.diff(actual, expected)
     @diff == {}
   end
-    
+
   failure_message_for_should do |container|
     puts "\n"
     print_diff(@diff)
     puts "\n"
     ""
   end
-  
+
   failure_message_for_should_not do |container|
     puts "\n"
     print_diff(@diff)
     puts "\n"
     ""
   end
-  
+
 end

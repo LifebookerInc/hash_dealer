@@ -12,6 +12,10 @@ class HashDealer
       self_for_comparison.eql?(other_for_comparison)
     end
 
+    def ==(other)
+      return self.eql?(other)
+    end
+
     def to_hash
       ret = ::Hash.new
       self.each_pair do |k,v|

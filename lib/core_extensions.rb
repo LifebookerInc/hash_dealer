@@ -45,7 +45,7 @@ end
       return other.eql?(self) if other.is_a?(TimeDateMatcher)
       return old_eql?(other)
     end
-    
+
   EOE
 end
 
@@ -65,15 +65,15 @@ end
     def matcher(opts={})
       BooleanMatcher.new(self)
     end
-  
+
     alias_method :old_eql?, :eql?
     alias_method :old_equals_equals, :==
-  
+
     def ==(other)
       return other == self if other.is_a?(BooleanMatcher)
       return self.old_equals_equals(other)
     end
-  
+
     def eql?(other)
       return other.eql?(self) if other.is_a?(BooleanMatcher)
       return self.old_eql?(other)
@@ -101,7 +101,7 @@ class String
   define_method "==_with_path_string" do |other|
     if other.is_a?(PathString)
       return true if self.is_a?(PathString)
-      return other == self 
+      return other == self
     end
     return self.send("==_without_path_string", other)
   end
@@ -130,8 +130,10 @@ class Hash
     opts[:only] ||= self.keys.collect(&:to_sym)
     opts[:only] = opts[:only].collect(&:to_sym)
     opts[:only] -= (opts[:except] || []).collect(&:to_sym)
-    
-    ret = self.class.new
+
+    ret = self.clone
+    # clear out the keys
+    ret.clear
     self.each_pair do |k,v|
       if opts[:only].include?(k.to_sym)
         ret[k] = v.matcher(opts[k.to_sym] || {})
