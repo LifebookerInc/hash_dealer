@@ -98,15 +98,15 @@ class String
     # if we have a leading : or a /:xyz - a matcher is already defined
     self =~ /(^:|\/:)/ ? PathString.new(self) : PathString.new(":#{self}")
   end
-  define_method "==_with_path_string" do |other|
+  define_method "with_path_string_eql" do |other|
     if other.is_a?(PathString)
       return true if self.is_a?(PathString)
       return other == self
     end
-    return self.send("==_without_path_string", other)
+    return self.send("without_path_string_eql", other)
   end
-  alias_method "==_without_path_string", :==
-  alias_method :==, "==_with_path_string"
+  alias_method "without_path_string_eql", :==
+  alias_method :==, "with_path_string_eql"
   alias_method :eql?, :==
   # make a string bold
   def bold
@@ -174,12 +174,11 @@ class Array
   # we want this to apply to both :eql? and ==
   alias_method :eql?, :==
   # we want this to add decorator behavior to ==, proxying to VariableArray if possible
-  define_method "==_with_variable_array" do |other|
+  define_method "with_variable_array_eql" do |other|
     return other == self if other.is_a?(VariableArray)
-    self.send("==_without_variable_array",other)
+    self.send("without_variable_array_eql",other)
   end
-  # Equivalent to:
-  # alias_method_chain "==", "variable_array"
-  alias_method "==_without_variable_array", :==
-  alias_method :==, "==_with_variable_array"
+
+  alias_method 'without_variable_array_eql', :==
+  alias_method :==, 'with_variable_array_eql'
 end
