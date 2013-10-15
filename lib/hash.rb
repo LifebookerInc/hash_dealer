@@ -27,9 +27,9 @@ class HashDealer
     protected
 
     def remove_optional_keys(hash)
-      hash = hash.clone.to_hash
+      hash = hash.clone.to_hash.stringify_keys
       @optional_attributes.each do |optional_attribute|
-        hash.delete(optional_attribute)
+        hash.delete(optional_attribute.to_s)
       end
       hash
     end
