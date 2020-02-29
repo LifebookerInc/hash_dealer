@@ -25,7 +25,7 @@ GEM
       rdoc
     json (1.8.0)
     multi_json (1.0.3)
-    rake (10.1.0)
+    rake (13.0.1)
     rdoc (4.0.1)
       json (~> 1.4)
     rspec (2.14.1)
